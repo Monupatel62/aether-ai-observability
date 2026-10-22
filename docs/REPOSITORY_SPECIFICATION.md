@@ -1,6 +1,6 @@
 # Repository specification: aether-ai-observability
 
-**Status:** Documentation baseline copied from the Aether AI master specification. Implementation status must be verified separately.
+**Status:** Repository exists; documentation-only on the inspected `main` branch. No application implementation is present in the audited tree.
 
 ## Mission
 
@@ -8,7 +8,7 @@ Structured logs, metrics, traces, run correlation, dashboards, and alert definit
 
 ## Dependencies and connections
 
-All backend/runtime components and selected exporters.
+Provide dependency-light telemetry interfaces; avoid importing domain services or sensitive payloads.
 
 ## Owned capabilities
 
