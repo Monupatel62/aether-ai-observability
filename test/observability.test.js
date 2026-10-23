@@ -52,3 +52,12 @@ test("clamps duration and creates request IDs", () => {
   assert.equal(emitted.durationMs, 86_400_000);
   assert.equal(emitted.outcome, "error");
 });
+
+
+test("drops arbitrary request identifiers and oversized event names", () => {
+  let emitted;
+  const telemetry = createTelemetry({ sink: (event) => { emitted = event; } });
+  assert.equal(telemetry.emit({ eventName: "api.request", requestId: "user@example.com/private", outcome: "ok" }), true);
+  assert.equal(emitted.requestId, null);
+  assert.equal(telemetry.emit({ eventName: "a".repeat(129), outcome: "ok" }), false);
+});
