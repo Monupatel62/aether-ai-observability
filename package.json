@@ -1,0 +1,10 @@
+{
+  "name": "@aether-ai/observability",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Metadata-only, privacy-conscious telemetry primitives.",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "exports": { ".": "./src/index.js" },
+  "scripts": { "test": "node --test", "check": "node --check src/index.js && node --check test/observability.test.js" }
+}

@@ -1,35 +1,23 @@
 # aether-ai-observability
 
-**Status:** Documentation-only on the inspected `main` branch. No application implementation is present in the audited tree.
+**Status:** Initial metadata-only telemetry primitives implemented on a feature branch. No production exporter or telemetry backend is configured.
 
-## Purpose
+## Implemented
 
-Shared observability contracts for structured logs, metrics, traces, correlation IDs, redaction, and retention controls.
+- [Telemetry source](src/index.js): W3C traceparent parsing with safe replacement, request IDs, allowlisted event fields, bounded duration, and sink-failure isolation.
+- [Unit tests](test/observability.test.js): valid/malformed trace context, all-zero IDs, prompt/secret field dropping, invalid events, sink failures, and duration limits.
+- Dependency-free Node.js package with Node 20/22 CI.
 
-## Dependencies
+## Privacy boundary
 
-Provide dependency-light telemetry interfaces; avoid importing domain services or capturing sensitive payloads by default.
+Only explicit metadata fields are emitted. Arbitrary attributes, prompts, completions, authorization headers, and raw payloads are dropped. Production telemetry still requires a reviewed retention/redaction policy, access control, exporter configuration, and operational alerting. This package is not an OpenTelemetry SDK/exporter.
 
 ## Documentation
 
 - [Repository specification](docs/REPOSITORY_SPECIFICATION.md)
-- [Master repository catalog](https://github.com/Monupatel62/aether-ai-platform/blob/main/docs/REPOSITORY_CATALOG.md)
-- [Master architecture](https://github.com/Monupatel62/aether-ai-platform/blob/main/docs/MASTER_ARCHITECTURE.md)
-
-## Project rules
-
-- No implementation starts until the documentation and cross-repository contracts are reviewed.
-- Keep telemetry metadata-first; sensitive prompts, completions, credentials, and personal data are excluded by default.
-- Document retention, redaction, access control, and operational failure behavior before enabling production telemetry.
-
-## Repository documents
-
 - [Project specification](docs/PROJECT_SPEC.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Dependencies and contracts](docs/DEPENDENCIES_AND_CONTRACTS.md)
 - [Implementation plan](docs/IMPLEMENTATION_PLAN.md)
-- [Research and licenses](docs/RESEARCH_AND_LICENSES.md)
-- [Technical design](docs/TECHNICAL_DESIGN.md)
 - [Security review](docs/SECURITY_REVIEW.md)
-- [Engineering standard](docs/ENGINEERING_STANDARD.md)
-- [Work log](docs/WORKLOG.md)
+- [Master catalog](https://github.com/Monupatel62/aether-ai-platform/blob/main/docs/REPOSITORY_CATALOG.md)
