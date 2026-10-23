@@ -1,35 +1,41 @@
-# aether-ai-observability
+# @aether-ai/observability
 
-**Status:** Documentation-only on the inspected `main` branch. No application implementation is present in the audited tree.
+Metadata-only telemetry event contracts and allowlisted sanitization for Aether AI.
 
-## Purpose
+## Status
 
-Shared observability contracts for structured logs, metrics, traces, correlation IDs, redaction, and retention controls.
+Initial contract foundation in review. No exporter, telemetry backend, queue, retention policy, or security-audit storage is implemented. Backend, region, retention, sampling, and audit durability remain open decisions.
 
-## Dependencies
+## Safety defaults
 
-Provide dependency-light telemetry interfaces; avoid importing domain services or capturing sensitive payloads by default.
+- Events accept only timestamp, service, environment, version, operation, outcome, duration, correlation ID, trace ID, and bounded error category.
+- Unknown properties—including prompts, completions, documents, credentials, headers, and raw provider errors—are discarded by the runtime sanitizer.
+- Label fields are bounded and reject spaces/free-form text to reduce accidental payload capture and cardinality.
+- Raw error messages are not part of the event type.
+- This contract does not replace access control, retention enforcement, or durable security audit logging.
 
-## Documentation
+## Example
 
-- [Repository specification](docs/REPOSITORY_SPECIFICATION.md)
-- [Master repository catalog](https://github.com/Monupatel62/aether-ai-platform/blob/main/docs/REPOSITORY_CATALOG.md)
-- [Master architecture](https://github.com/Monupatel62/aether-ai-platform/blob/main/docs/MASTER_ARCHITECTURE.md)
+```ts
+import { createTelemetryEvent } from "@aether-ai/observability";
 
-## Project rules
+const event = createTelemetryEvent({
+  service: "api",
+  environment: "test",
+  version: "0.1.0",
+  operation: "chat.complete",
+  outcome: "success",
+  durationMs: 42
+});
+```
 
-- No implementation starts until the documentation and cross-repository contracts are reviewed.
-- Keep telemetry metadata-first; sensitive prompts, completions, credentials, and personal data are excluded by default.
-- Document retention, redaction, access control, and operational failure behavior before enabling production telemetry.
+## Development
 
-## Repository documents
+```bash
+npm install
+npm run typecheck
+npm test
+npm run build
+```
 
-- [Project specification](docs/PROJECT_SPEC.md)
-- [Architecture](docs/ARCHITECTURE.md)
-- [Dependencies and contracts](docs/DEPENDENCIES_AND_CONTRACTS.md)
-- [Implementation plan](docs/IMPLEMENTATION_PLAN.md)
-- [Research and licenses](docs/RESEARCH_AND_LICENSES.md)
-- [Technical design](docs/TECHNICAL_DESIGN.md)
-- [Security review](docs/SECURITY_REVIEW.md)
-- [Engineering standard](docs/ENGINEERING_STANDARD.md)
-- [Work log](docs/WORKLOG.md)
+CI is configured for Node.js 20 and 22. Exporters, bounded queues, flush/shutdown, sampling, dashboards, retention, and security audit separation remain future work.
