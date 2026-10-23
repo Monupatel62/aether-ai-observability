@@ -28,10 +28,10 @@ export function createTelemetry({ sink = () => {}, clock = () => Date.now() } = 
     newRequestId() { return randomUUID(); },
     emit(input) {
       if (input === null || typeof input !== "object" || Array.isArray(input)) return false;
-      if (typeof input.eventName !== "string" || !EVENT_NAME.test(input.eventName)) return false;
+      if (typeof input.eventName !== "string" || input.eventName.length > 128 || !EVENT_NAME.test(input.eventName)) return false;
       const event = {
         eventName: input.eventName,
-        requestId: typeof input.requestId === "string" && input.requestId.length <= 128 ? input.requestId : null,
+        requestId: typeof input.requestId === "string" && /^[A-Za-z0-9._:-]{1,128}$/.test(input.requestId) ? input.requestId : null,
         traceId: typeof input.traceId === "string" && /^[0-9a-f]{32}$/i.test(input.traceId) && nonZeroHex(input.traceId) ? input.traceId.toLowerCase() : null,
         spanId: typeof input.spanId === "string" && /^[0-9a-f]{16}$/i.test(input.spanId) && nonZeroHex(input.spanId) ? input.spanId.toLowerCase() : null,
         durationMs: Number.isFinite(input.durationMs) && input.durationMs >= 0 ? Math.min(input.durationMs, 86_400_000) : null,
